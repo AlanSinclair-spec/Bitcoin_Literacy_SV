@@ -9,6 +9,8 @@ import pandas as pd
 from datetime import datetime
 import random
 import json
+import os
+from openai import OpenAI
 
 # ============================================================================
 # TRANSLATIONS - Bilingual Support (Spanish/English)
@@ -605,6 +607,78 @@ def generate_wallet_address() -> str:
     return prefix + "".join(random.choice(chars) for _ in range(length - len(prefix)))
 
 
+def get_xai_api_key() -> str:
+    """Get xAI API key from secrets or environment"""
+    # Try Streamlit secrets first
+    try:
+        if hasattr(st, 'secrets') and 'XAI_API_KEY' in st.secrets:
+            return st.secrets['XAI_API_KEY']
+    except Exception:
+        pass
+
+    # Fall back to environment variable
+    return os.environ.get('XAI_API_KEY', '')
+
+
+def get_grok_response(user_message: str, chat_history: list, language: str) -> str:
+    """Get response from Grok/xAI API for Bitcoin education"""
+    api_key = get_xai_api_key()
+
+    if not api_key:
+        if language == "es":
+            return "⚠️ API de xAI no configurada. Por favor, configura tu clave API de xAI para habilitar el tutor de IA."
+        return "⚠️ xAI API not configured. Please set your xAI API key to enable the AI tutor."
+
+    # Bilingual system prompt for Bitcoin education
+    system_prompt = """You are a friendly Bitcoin educator for El Salvador. Your role is to help people learn about Bitcoin in simple, clear terms.
+
+Key guidelines:
+- Explain Bitcoin concepts simply, suitable for beginners
+- Focus on practical topics: wallets, Lightning Network, security, remittances, savings
+- Use examples relevant to El Salvador (pupusas, remittances from the US, Chivo wallet)
+- Be encouraging and patient with learners
+- If asked in Spanish, respond in Spanish. If asked in English, respond in English.
+- Keep responses concise but informative (2-3 paragraphs max)
+- Emphasize security best practices (never share seed phrases, beware of scams)
+- Explain both benefits and risks honestly
+
+You are an AI tutor in a Bitcoin literacy app for El Salvador, the first country to adopt Bitcoin as legal tender."""
+
+    try:
+        client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.x.ai/v1"
+        )
+
+        # Build messages with conversation history
+        messages = [{"role": "system", "content": system_prompt}]
+
+        # Add recent chat history (last 10 messages for context)
+        for msg in chat_history[-10:]:
+            messages.append({
+                "role": msg["role"],
+                "content": msg["content"]
+            })
+
+        # Add current user message
+        messages.append({"role": "user", "content": user_message})
+
+        response = client.chat.completions.create(
+            model="grok-beta",
+            messages=messages,
+            max_tokens=500,
+            temperature=0.7
+        )
+
+        return response.choices[0].message.content
+
+    except Exception as e:
+        error_msg = str(e)
+        if language == "es":
+            return f"❌ Error al conectar con el tutor IA: {error_msg}"
+        return f"❌ Error connecting to AI tutor: {error_msg}"
+
+
 # ============================================================================
 # MODULE FUNCTIONS
 # ============================================================================
@@ -981,13 +1055,17 @@ def module_stories():
 
 
 def module_ai_tutor():
-    """AI Tutor Module (Placeholder for Grok API)"""
+    """AI Tutor Module powered by Grok/xAI"""
     st.header(get_text("tutor_title"))
     st.write(get_text("tutor_intro"))
 
-    st.info(get_text("tutor_coming_soon"))
+    # Check API configuration status
+    api_key = get_xai_api_key()
+    if api_key:
+        st.success("✅ " + ("xAI/Grok API connected" if st.session_state.language == "en" else "API xAI/Grok conectada"))
+    else:
+        st.warning("⚠️ " + ("Set XAI_API_KEY environment variable or add to .streamlit/secrets.toml" if st.session_state.language == "en" else "Configura la variable de entorno XAI_API_KEY o agrégala a .streamlit/secrets.toml"))
 
-    # Chat interface placeholder
     st.divider()
 
     # Display chat history
@@ -1002,48 +1080,88 @@ def module_ai_tutor():
         # Add user message
         st.session_state.chat_history.append({"role": "user", "content": user_input})
 
-        # Placeholder response (replace with Grok API call)
-        placeholder_responses = {
-            "en": [
-                "Great question! Bitcoin is a fascinating topic. Once the Grok API is integrated, I'll be able to provide detailed answers about Bitcoin, blockchain technology, and cryptocurrency.",
-                "I'm currently a placeholder, but soon I'll be powered by Grok AI to help you learn about Bitcoin!",
-                "That's an interesting question! The full AI tutor will be able to explain complex Bitcoin concepts in simple terms.",
-            ],
-            "es": [
-                "¡Excelente pregunta! Bitcoin es un tema fascinante. Una vez que se integre la API de Grok, podré proporcionar respuestas detalladas sobre Bitcoin, tecnología blockchain y criptomonedas.",
-                "Actualmente soy un marcador de posición, ¡pero pronto seré impulsado por Grok AI para ayudarte a aprender sobre Bitcoin!",
-                "¡Esa es una pregunta interesante! El tutor de IA completo podrá explicar conceptos complejos de Bitcoin en términos simples.",
-            ]
-        }
-
-        lang = st.session_state.language
-        response = random.choice(placeholder_responses[lang])
+        # Get response from Grok API
+        with st.spinner("🤖 " + ("Thinking..." if st.session_state.language == "en" else "Pensando...")):
+            lang = st.session_state.language
+            response = get_grok_response(user_input, st.session_state.chat_history[:-1], lang)
 
         st.session_state.chat_history.append({"role": "assistant", "content": response})
+        add_xp(5)  # Reward for using AI tutor
         st.rerun()
 
-    # API configuration placeholder
-    with st.expander("🔧 API Configuration (Developer)"):
-        st.text_input("Grok API Key", type="password", placeholder="Enter your Grok API key here...")
-        st.caption("This will enable the full AI tutor functionality.")
+    # Clear chat button
+    col1, col2 = st.columns([1, 4])
+    with col1:
+        if st.button("🗑️ " + ("Clear Chat" if st.session_state.language == "en" else "Limpiar Chat")):
+            st.session_state.chat_history = []
+            st.rerun()
 
-        st.code("""
-# Example Grok API Integration (Coming Soon)
-import openai
+    # Suggested questions
+    st.divider()
+    st.subheader("💡 " + ("Suggested Questions" if st.session_state.language == "en" else "Preguntas Sugeridas"))
 
-client = openai.OpenAI(
-    api_key="your-grok-api-key",
-    base_url="https://api.x.ai/v1"
-)
+    suggested = {
+        "en": [
+            "What is Bitcoin and how does it work?",
+            "How do I keep my Bitcoin safe?",
+            "What is the Lightning Network?",
+            "How can I send remittances with Bitcoin?",
+        ],
+        "es": [
+            "¿Qué es Bitcoin y cómo funciona?",
+            "¿Cómo mantengo seguro mi Bitcoin?",
+            "¿Qué es la Lightning Network?",
+            "¿Cómo puedo enviar remesas con Bitcoin?",
+        ]
+    }
 
-response = client.chat.completions.create(
-    model="grok-beta",
-    messages=[
-        {"role": "system", "content": "You are a Bitcoin educator..."},
-        {"role": "user", "content": user_question}
-    ]
-)
-        """, language="python")
+    cols = st.columns(2)
+    lang = st.session_state.language
+    for idx, question in enumerate(suggested[lang]):
+        with cols[idx % 2]:
+            if st.button(question, key=f"suggested_{idx}"):
+                st.session_state.chat_history.append({"role": "user", "content": question})
+                with st.spinner("🤖 " + ("Thinking..." if lang == "en" else "Pensando...")):
+                    response = get_grok_response(question, st.session_state.chat_history[:-1], lang)
+                st.session_state.chat_history.append({"role": "assistant", "content": response})
+                add_xp(5)
+                st.rerun()
+
+    # API configuration help
+    with st.expander("🔧 " + ("API Configuration" if st.session_state.language == "en" else "Configuración de API")):
+        config_text = {
+            "en": """
+**To enable the AI Tutor:**
+
+1. Get an API key from [x.ai](https://x.ai)
+
+2. Set the environment variable:
+```bash
+export XAI_API_KEY="your-api-key-here"
+```
+
+3. Or add to `.streamlit/secrets.toml`:
+```toml
+XAI_API_KEY = "your-api-key-here"
+```
+            """,
+            "es": """
+**Para habilitar el Tutor IA:**
+
+1. Obtén una clave API de [x.ai](https://x.ai)
+
+2. Configura la variable de entorno:
+```bash
+export XAI_API_KEY="tu-clave-api-aqui"
+```
+
+3. O agrégala a `.streamlit/secrets.toml`:
+```toml
+XAI_API_KEY = "tu-clave-api-aqui"
+```
+            """
+        }
+        st.markdown(config_text[st.session_state.language])
 
 
 # ============================================================================
