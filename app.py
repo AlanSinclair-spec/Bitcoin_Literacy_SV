@@ -209,30 +209,20 @@ customer in Japan, it happens in the blink of an eye. That's the power of Lightn
         "ach_quiz_champion": "🏆 Quiz Champion",
         "ach_budget_pro": "💰 Budget Pro",
         "ach_story_reader": "📖 Story Reader",
-        "ach_great_teacher": "👨‍🏫 Great Teacher",
-        "ach_story_explorer": "🗺️ Story Explorer",
-        "ach_luna_friend": "🌙 Luna's Friend",
 
-        # Character Tutor Modes
-        "select_mode": "Select Mode",
-        "learn_with_luna": "🌙 Learn with Luna",
-        "teach_pedrito": "👦 Teach Pedrito",
-        "adventure_mode": "📖 Adventure",
-        "reset_conversation": "Reset Chat",
-        "enter_your_name": "Enter your name to begin the adventure:",
-        "start_adventure": "Start Adventure",
-        "chapter": "Chapter",
-        "coming_soon": "Coming Soon",
-        "luna_intro": "¡Hola! I'm Luna 🌙 My abuela taught me everything about Bitcoin when the volcanoes started mining! Want me to tell you what I learned?",
-        "pedrito_intro": "¡Hola profe! I'm Pedrito 👦 They told me Bitcoin is like magic internet money that comes from volcanoes... is that true? Can you teach me?",
-        "teaching_tip": "💡 Tip: Teach Pedrito about Bitcoin! Use terms like '21 million', 'decentralized', 'satoshi', 'wallet', 'blockchain' to earn bonus XP!",
-        "great_teaching": "🎉 Great teaching! Pedrito understood! +15 XP",
-        "adventure_intro": "Welcome to the Bitcoin Adventure! You'll join Luna on an exciting journey through El Salvador learning about Bitcoin.",
-        "chapter_1_title": "First Satoshis",
-        "chapter_2_title": "The Chivo Wallet",
-        "chapter_3_title": "Lightning Speed",
-        "chapter_4_title": "The Volcano",
-        "chapter_5_title": "Sending Home",
+        # Chatbot Modes
+        "chatbot_title": "Ask Me Anything",
+        "mode_socratic": "Socratic",
+        "mode_teacher": "Teach Me",
+        "mode_voice": "Simple",
+        "mode_curriculum": "Curriculum",
+        "socratic_desc": "I'll guide you with questions",
+        "teacher_desc": "Explain to me, I'll ask questions",
+        "voice_desc": "Simple, conversational answers",
+        "curriculum_desc": "Follow the Bitcoin curriculum",
+        "send": "Send",
+        "clear_chat": "Clear",
+        "chat_placeholder": "Ask anything about Bitcoin...",
     },
     "es": {
         # Navigation
@@ -426,30 +416,20 @@ cliente en Japón, sucede en un abrir y cerrar de ojos. ¡Ese es el poder de Lig
         "ach_quiz_champion": "🏆 Campeón del Quiz",
         "ach_budget_pro": "💰 Profesional del Presupuesto",
         "ach_story_reader": "📖 Lector de Historias",
-        "ach_great_teacher": "👨‍🏫 Gran Maestro",
-        "ach_story_explorer": "🗺️ Explorador de Historias",
-        "ach_luna_friend": "🌙 Amigo de Luna",
 
-        # Character Tutor Modes
-        "select_mode": "Selecciona Modo",
-        "learn_with_luna": "🌙 Aprende con Luna",
-        "teach_pedrito": "👦 Enseña a Pedrito",
-        "adventure_mode": "📖 Aventura",
-        "reset_conversation": "Reiniciar Chat",
-        "enter_your_name": "Escribe tu nombre para comenzar la aventura:",
-        "start_adventure": "Iniciar Aventura",
-        "chapter": "Capítulo",
-        "coming_soon": "Próximamente",
-        "luna_intro": "¡Hola! Soy Luna 🌙 Mi abuela me enseñó todo sobre Bitcoin cuando los volcanes empezaron a minar. ¿Quieres que te cuente lo que aprendí?",
-        "pedrito_intro": "¡Hola profe! Soy Pedrito 👦 Me dijeron que Bitcoin es como dinero mágico de internet que sale de los volcanes... ¿es verdad? ¿Me puedes enseñar?",
-        "teaching_tip": "💡 Consejo: ¡Enséñale a Pedrito sobre Bitcoin! Usa términos como '21 millones', 'descentralizado', 'satoshi', 'billetera', 'blockchain' para ganar XP extra!",
-        "great_teaching": "🎉 ¡Excelente enseñanza! ¡Pedrito entendió! +15 XP",
-        "adventure_intro": "¡Bienvenido a la Aventura Bitcoin! Acompañarás a Luna en un emocionante viaje por El Salvador aprendiendo sobre Bitcoin.",
-        "chapter_1_title": "Primeros Satoshis",
-        "chapter_2_title": "La Billetera Chivo",
-        "chapter_3_title": "Velocidad Lightning",
-        "chapter_4_title": "El Volcán",
-        "chapter_5_title": "Enviando a Casa",
+        # Chatbot Modes
+        "chatbot_title": "Pregúntame",
+        "mode_socratic": "Socrático",
+        "mode_teacher": "Enséñame",
+        "mode_voice": "Simple",
+        "mode_curriculum": "Currículo",
+        "socratic_desc": "Te guío con preguntas",
+        "teacher_desc": "Explícame, te haré preguntas",
+        "voice_desc": "Respuestas simples y conversacionales",
+        "curriculum_desc": "Sigue el currículo de Bitcoin",
+        "send": "Enviar",
+        "clear_chat": "Limpiar",
+        "chat_placeholder": "Pregunta lo que quieras sobre Bitcoin...",
     }
 }
 
@@ -629,33 +609,15 @@ def initialize_session_state():
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
 
-    # Character-based tutor modes
-    if "tutor_mode" not in st.session_state:
-        st.session_state.tutor_mode = "luna"  # luna, pedrito, adventure
+    # Floating chatbot state
+    if "chatbot_mode" not in st.session_state:
+        st.session_state.chatbot_mode = "socratic"  # socratic, teacher, voice, curriculum
 
-    if "luna_chat_history" not in st.session_state:
-        st.session_state.luna_chat_history = []
+    if "chatbot_history" not in st.session_state:
+        st.session_state.chatbot_history = []
 
-    if "pedrito_chat_history" not in st.session_state:
-        st.session_state.pedrito_chat_history = []
-
-    if "adventure_chat_history" not in st.session_state:
-        st.session_state.adventure_chat_history = []
-
-    if "student_name" not in st.session_state:
-        st.session_state.student_name = ""
-
-    if "story_chapter" not in st.session_state:
-        st.session_state.story_chapter = 1
-
-    if "story_path" not in st.session_state:
-        st.session_state.story_path = ""
-
-    if "teaching_score" not in st.session_state:
-        st.session_state.teaching_score = 0
-
-    if "luna_conversations" not in st.session_state:
-        st.session_state.luna_conversations = 0
+    if "curriculum_topic" not in st.session_state:
+        st.session_state.curriculum_topic = 0
 
 
 def add_xp(amount: int):
@@ -740,7 +702,7 @@ You are an AI tutor in a Bitcoin literacy app for El Salvador, the first country
         messages.append({"role": "user", "content": user_message})
 
         response = client.chat.completions.create(
-            model="grok-beta",
+            model="grok-3",
             messages=messages,
             max_tokens=500,
             temperature=0.7
@@ -756,181 +718,133 @@ You are an AI tutor in a Bitcoin literacy app for El Salvador, the first country
 
 
 # ============================================================================
-# CHARACTER PROMPTS FOR TUTOR MODES
+# CHATBOT PROMPTS AND CURRICULUM
 # ============================================================================
 
-LUNA_PROMPT_ES = """Eres Luna, una niña curiosa de 10 años de El Salvador que aprendió sobre Bitcoin de su abuela.
-
-Personalidad:
-- Habla en primera persona como Luna
-- Referencia tu propio viaje aprendiendo Bitcoin
-- Usa expresiones salvadoreñas: "¡Qué chivo!", "cipote/cipota", "puchica", "va pues"
-- Sé alentadora, curiosa y amigable
-- Comparte historias de cómo tu abuela te enseñó sobre el dinero y Bitcoin
-- Menciona lugares de El Salvador: el mercado, los volcanes, la playa
-
-Directrices:
-- Explica conceptos de Bitcoin de manera simple, para principiantes
-- Usa ejemplos de la vida cotidiana en El Salvador (pupusas, remesas, Chivo wallet)
-- Mantén respuestas concisas (2-3 párrafos máximo)
-- Enfatiza la seguridad (nunca compartir frase semilla)
-
-Siempre comienza con un saludo cálido referenciando tu personaje."""
-
-LUNA_PROMPT_EN = """You are Luna, a curious 10-year-old girl from El Salvador who learned about Bitcoin from her grandmother.
-
-Personality:
-- Speak in first person as Luna
-- Reference your own Bitcoin learning journey
-- Use Salvadoran expressions: "¡Qué chivo!", "cipote/cipota", "puchica", "va pues"
-- Be encouraging, curious, and friendly
-- Share stories about your abuela teaching you about money and Bitcoin
-- Mention places in El Salvador: the market, volcanoes, the beach
-
-Guidelines:
-- Explain Bitcoin concepts simply, for beginners
-- Use everyday examples from El Salvador (pupusas, remittances, Chivo wallet)
-- Keep responses concise (2-3 paragraphs max)
-- Emphasize security (never share seed phrase)
-
-Always start with a warm greeting referencing your character."""
-
-PEDRITO_PROMPT_ES = """Eres Pedrito, un estudiante confundido de 7 años tratando de aprender sobre Bitcoin. El USUARIO es tu maestro/profe.
-
-Comportamiento:
-- Haz preguntas ingenuas sobre Bitcoin
-- Comete errores intencionales para que el usuario te corrija
-- Di cosas como "¿Entonces Bitcoin es como los colones?" o "¿El gobierno puede imprimir más Bitcoin?"
-- Cuando te corrijan correctamente, di "¡Ahhhh, ya entendí!" y haz una pregunta de seguimiento
-- Sé curioso pero ten conceptos erróneos comunes
-- NUNCA des información correcta sobre Bitcoin - siempre sé el estudiante
-- Usa lenguaje de niño pequeño
-
-Ejemplos de preguntas confundidas:
-- "Profe, ¿Bitcoin es como el dinero que mi mamá guarda en el banco?"
-- "¿Puedo tocar un Bitcoin? ¿Es como una moneda de oro?"
-- "Si se va la luz, ¿se pierden los Bitcoin?"
-- "¿Mi tío puede copiar sus Bitcoin y darnos a todos?"
-
-Recuerda: TÚ eres el estudiante. El usuario te está enseñando."""
-
-PEDRITO_PROMPT_EN = """You are Pedrito, a confused 7-year-old student trying to learn about Bitcoin. The USER is your teacher.
-
-Behavior:
-- Ask naive questions about Bitcoin
-- Make intentional mistakes for the user to correct
-- Say things like "So Bitcoin is like colones?" or "Can the government print more Bitcoin?"
-- When corrected properly, say "¡Ahhhh, ya entendí!" (Ohhh, now I understand!) and ask a follow-up
-- Be curious but have common misconceptions
-- NEVER give correct Bitcoin information - always be the student
-- Use child-like language
-
-Examples of confused questions:
-- "Teacher, is Bitcoin like the money my mom keeps in the bank?"
-- "Can I touch a Bitcoin? Is it like a gold coin?"
-- "If the power goes out, do the Bitcoins disappear?"
-- "Can my uncle copy his Bitcoin and give some to everyone?"
-
-Remember: YOU are the student. The user is teaching you."""
-
-ADVENTURE_PROMPT_ES = """Eres el narrador de una aventura interactiva de aprendizaje de Bitcoin protagonizada por Luna y {student_name}.
-
-Capítulo actual: {chapter}
-Historial de elecciones del jugador: {story_path}
-
-Formato:
-- Escribe segmentos de historia en segunda persona ("Tú y Luna caminan hacia el mercado...")
-- Termina CADA segmento con exactamente 2 opciones etiquetadas [A] y [B]
-- Enseña UN concepto de Bitcoin por segmento de historia
-- Las opciones deben ser significativas y llevar a diferentes aprendizajes
-- Mantén el tono aventurero pero educativo
-- Referencias a lugares de El Salvador: volcanes, mercados, playas, pueblos
-
-Capítulos disponibles:
-1. Primeros Satoshis - Introducción a Bitcoin (¿Qué es Bitcoin? ¿Por qué es especial?)
-2. La Billetera Chivo - Configuración y seguridad (Cómo guardar Bitcoin de forma segura)
-
-Usa el historial de elecciones para mantener continuidad narrativa y referenciar decisiones pasadas.
-Si no hay historial, comienza el capítulo desde el principio."""
-
-ADVENTURE_PROMPT_EN = """You are narrating an interactive Bitcoin learning adventure starring Luna and {student_name}.
-
-Current chapter: {chapter}
-Player's choice history: {story_path}
-
-Format:
-- Write story segments in 2nd person ("You and Luna walk to the market...")
-- End EVERY segment with exactly 2 choices labeled [A] and [B]
-- Teach ONE Bitcoin concept per story segment
-- Choices should be meaningful and lead to different learnings
-- Keep the tone adventurous but educational
-- Reference places in El Salvador: volcanoes, markets, beaches, villages
-
-Available chapters:
-1. First Satoshis - Introduction to Bitcoin (What is Bitcoin? Why is it special?)
-2. The Chivo Wallet - Setup and security (How to store Bitcoin safely)
-
-Use the choice history to maintain narrative continuity and reference past decisions.
-If no history, start the chapter from the beginning."""
-
-# Teaching keywords for Pedrito mode
-TEACHING_KEYWORDS = [
-    "21 million", "21 millones",
-    "decentralized", "descentralizado", "descentralizada",
-    "satoshi", "satoshis",
-    "blockchain", "cadena de bloques",
-    "lightning", "rayo",
-    "private key", "clave privada",
-    "seed phrase", "frase semilla",
-    "wallet", "billetera",
-    "mining", "minería", "minar",
-    "hash", "nodo", "node",
-    "peer to peer", "p2p",
-    "digital", "escaso", "scarce",
-    "inmutable", "immutable"
+# Curriculum topics for structured learning
+CURRICULUM_TOPICS = [
+    {"en": "What is Bitcoin?", "es": "¿Qué es Bitcoin?"},
+    {"en": "Why Bitcoin in El Salvador?", "es": "¿Por qué Bitcoin en El Salvador?"},
+    {"en": "Satoshis & Units", "es": "Satoshis y Unidades"},
+    {"en": "Wallets & Security", "es": "Billeteras y Seguridad"},
+    {"en": "Lightning Network", "es": "Red Lightning"},
+    {"en": "HODL & Saving", "es": "HODL y Ahorro"},
+    {"en": "Avoiding Scams", "es": "Evitando Estafas"},
 ]
 
-# Adventure chapters configuration
-ADVENTURE_CHAPTERS = {
-    1: {"title_en": "First Satoshis", "title_es": "Primeros Satoshis", "available": True},
-    2: {"title_en": "The Chivo Wallet", "title_es": "La Billetera Chivo", "available": True},
-    3: {"title_en": "Lightning Speed", "title_es": "Velocidad Lightning", "available": False},
-    4: {"title_en": "The Volcano", "title_es": "El Volcán", "available": False},
-    5: {"title_en": "Sending Home", "title_es": "Enviando a Casa", "available": False},
+# Chatbot mode prompts
+CHATBOT_PROMPTS = {
+    "socratic": {
+        "en": """You are a Socratic Bitcoin tutor for El Salvador. Instead of giving direct answers:
+- Ask guiding questions to help the user discover answers themselves
+- Break complex topics into smaller questions
+- Validate understanding before moving forward
+- Use phrases like "What do you think would happen if..." or "Why might that be important?"
+- Only give direct information when the user is stuck after 2-3 questions
+- Use examples relevant to El Salvador (remittances, Chivo wallet, pupusas)
+Keep responses concise (2-3 sentences per question).""",
+        "es": """Eres un tutor socrático de Bitcoin para El Salvador. En lugar de dar respuestas directas:
+- Haz preguntas guía para que el usuario descubra las respuestas por sí mismo
+- Divide temas complejos en preguntas más pequeñas
+- Valida la comprensión antes de avanzar
+- Usa frases como "¿Qué crees que pasaría si..." o "¿Por qué podría ser importante?"
+- Solo da información directa cuando el usuario esté atascado después de 2-3 preguntas
+- Usa ejemplos relevantes para El Salvador (remesas, Chivo wallet, pupusas)
+Mantén respuestas concisas (2-3 oraciones por pregunta)."""
+    },
+    "teacher": {
+        "en": """You are a curious student learning about Bitcoin. The USER is teaching YOU.
+- Ask clarifying questions about what they explain
+- Point out if something seems unclear or contradictory
+- Say "I don't understand..." to encourage deeper explanation
+- When they explain well, say "Ah, so you mean..." to confirm
+- Give encouraging feedback when they teach correctly
+- Make common beginner mistakes for them to correct
+- NEVER give correct Bitcoin information - always be the student
+Keep responses short (1-2 sentences).""",
+        "es": """Eres un estudiante curioso aprendiendo sobre Bitcoin. El USUARIO te está enseñando a TI.
+- Haz preguntas aclaratorias sobre lo que explican
+- Señala si algo parece confuso o contradictorio
+- Di "No entiendo..." para animar explicaciones más profundas
+- Cuando expliquen bien, di "Ah, ¿entonces quieres decir..." para confirmar
+- Da retroalimentación alentadora cuando enseñen correctamente
+- Comete errores comunes de principiante para que te corrijan
+- NUNCA des información correcta sobre Bitcoin - siempre sé el estudiante
+Mantén respuestas cortas (1-2 oraciones)."""
+    },
+    "voice": {
+        "en": """You are a friendly Bitcoin educator giving voice-like responses for El Salvador.
+- Keep answers SHORT (2-3 sentences max)
+- Use simple, everyday language
+- Avoid jargon - if you must use it, explain immediately
+- Sound natural, as if speaking to a friend
+- Use contractions and casual tone
+- Use examples from El Salvador (pupusas, remittances, Chivo wallet)""",
+        "es": """Eres un educador amigable de Bitcoin dando respuestas como si hablaras para El Salvador.
+- Mantén respuestas CORTAS (2-3 oraciones máximo)
+- Usa lenguaje simple y cotidiano
+- Evita jerga - si debes usarla, explícala inmediatamente
+- Suena natural, como si hablaras con un amigo
+- Usa un tono casual
+- Usa ejemplos de El Salvador (pupusas, remesas, Chivo wallet)"""
+    },
+    "curriculum": {
+        "en": """You are a structured Bitcoin curriculum tutor for El Salvador. Current topic: {topic}
+
+CURRICULUM TOPICS:
+1. What is Bitcoin? (Digital money, no banks)
+2. Why Bitcoin in El Salvador? (Remittances, financial inclusion)
+3. Satoshis & Units (100M sats = 1 BTC)
+4. Wallets & Security (Hot vs cold, seed phrases)
+5. Lightning Network (Fast, cheap transactions)
+6. HODL & Saving (Long-term thinking)
+7. Avoiding Scams (Red flags, verification)
+
+Rules:
+- Only discuss the current topic
+- When user shows understanding, suggest moving to next topic
+- Provide practical El Salvador examples
+- End responses with a comprehension check question
+- Keep responses focused and educational (2-3 paragraphs max)""",
+        "es": """Eres un tutor de currículo estructurado de Bitcoin para El Salvador. Tema actual: {topic}
+
+TEMAS DEL CURRÍCULO:
+1. ¿Qué es Bitcoin? (Dinero digital, sin bancos)
+2. ¿Por qué Bitcoin en El Salvador? (Remesas, inclusión financiera)
+3. Satoshis y Unidades (100M sats = 1 BTC)
+4. Billeteras y Seguridad (Caliente vs fría, frases semilla)
+5. Red Lightning (Transacciones rápidas y baratas)
+6. HODL y Ahorro (Pensamiento a largo plazo)
+7. Evitando Estafas (Señales de alerta, verificación)
+
+Reglas:
+- Solo discute el tema actual
+- Cuando el usuario muestre comprensión, sugiere pasar al siguiente tema
+- Proporciona ejemplos prácticos de El Salvador
+- Termina respuestas con una pregunta de comprensión
+- Mantén respuestas enfocadas y educativas (2-3 párrafos máximo)"""
+    }
 }
 
 
-def check_teaching_success(message: str) -> bool:
-    """Check if user's message contains teaching keywords for Pedrito mode"""
-    message_lower = message.lower()
-    return any(keyword.lower() in message_lower for keyword in TEACHING_KEYWORDS)
-
-
-def get_character_response(user_message: str, chat_history: list, language: str, mode: str,
-                           student_name: str = "", chapter: int = 1, story_path: str = "") -> str:
-    """Get AI response based on current tutor mode and character"""
+def get_chatbot_response(user_message: str, chat_history: list, language: str, mode: str) -> str:
+    """Get AI response based on chatbot mode"""
     api_key = get_xai_api_key()
 
     if not api_key:
         if language == "es":
-            return "⚠️ API de xAI no configurada. Por favor, configura tu clave API de xAI para habilitar el tutor de IA."
-        return "⚠️ xAI API not configured. Please set your xAI API key to enable the AI tutor."
+            return "⚠️ API de xAI no configurada. Por favor, configura tu clave API."
+        return "⚠️ xAI API not configured. Please set your xAI API key."
 
-    # Select appropriate prompt based on mode and language
-    if mode == "luna":
-        system_prompt = LUNA_PROMPT_ES if language == "es" else LUNA_PROMPT_EN
-    elif mode == "pedrito":
-        system_prompt = PEDRITO_PROMPT_ES if language == "es" else PEDRITO_PROMPT_EN
-    elif mode == "adventure":
-        base_prompt = ADVENTURE_PROMPT_ES if language == "es" else ADVENTURE_PROMPT_EN
-        system_prompt = base_prompt.format(
-            student_name=student_name or "Aventurero",
-            chapter=chapter,
-            story_path=story_path or "ninguno/none"
-        )
-    else:
-        # Fallback to Luna
-        system_prompt = LUNA_PROMPT_ES if language == "es" else LUNA_PROMPT_EN
+    # Get the appropriate prompt for the mode and language
+    prompt_template = CHATBOT_PROMPTS.get(mode, CHATBOT_PROMPTS["socratic"])
+    system_prompt = prompt_template.get(language, prompt_template["en"])
+
+    # For curriculum mode, add the current topic
+    if mode == "curriculum":
+        topic_idx = st.session_state.get("curriculum_topic", 0)
+        topic = CURRICULUM_TOPICS[topic_idx][language]
+        system_prompt = system_prompt.format(topic=topic)
 
     try:
         client = OpenAI(
@@ -950,10 +864,10 @@ def get_character_response(user_message: str, chat_history: list, language: str,
         messages.append({"role": "user", "content": user_message})
 
         response = client.chat.completions.create(
-            model="grok-beta",
+            model="grok-3",
             messages=messages,
-            max_tokens=600,
-            temperature=0.8
+            max_tokens=400,
+            temperature=0.7
         )
 
         return response.choices[0].message.content
@@ -961,8 +875,8 @@ def get_character_response(user_message: str, chat_history: list, language: str,
     except Exception as e:
         error_msg = str(e)
         if language == "es":
-            return f"❌ Error al conectar con el tutor IA: {error_msg}"
-        return f"❌ Error connecting to AI tutor: {error_msg}"
+            return f"❌ Error: {error_msg}"
+        return f"❌ Error: {error_msg}"
 
 
 # ============================================================================
@@ -1019,6 +933,83 @@ def show_sidebar():
             st.caption(f"≈ {price_data['sats_per_dollar']:,} {get_text('sats_per_dollar')}")
         else:
             st.warning("Price unavailable")
+
+        st.divider()
+
+        # ==================== FLOATING CHATBOT ====================
+        st.subheader("💬 " + get_text("chatbot_title"))
+
+        lang = st.session_state.language
+
+        # Mode selector (emoji buttons)
+        mode_cols = st.columns(4)
+        modes = [
+            ("socratic", "🤔"),
+            ("teacher", "👨‍🏫"),
+            ("voice", "🗣️"),
+            ("curriculum", "📚")
+        ]
+
+        for i, (mode_key, icon) in enumerate(modes):
+            with mode_cols[i]:
+                btn_type = "primary" if st.session_state.chatbot_mode == mode_key else "secondary"
+                if st.button(icon, key=f"sidebar_mode_{mode_key}", type=btn_type, use_container_width=True):
+                    st.session_state.chatbot_mode = mode_key
+                    st.rerun()
+
+        # Mode description
+        mode_desc_key = f"{st.session_state.chatbot_mode}_desc"
+        st.caption(get_text(mode_desc_key))
+
+        # Curriculum topic selector (only in curriculum mode)
+        if st.session_state.chatbot_mode == "curriculum":
+            topic_names = [t[lang] for t in CURRICULUM_TOPICS]
+            selected_topic = st.selectbox(
+                "📚",
+                topic_names,
+                index=st.session_state.curriculum_topic,
+                key="sidebar_topic_select",
+                label_visibility="collapsed"
+            )
+            st.session_state.curriculum_topic = topic_names.index(selected_topic)
+
+        # Chat messages (last 4 for sidebar)
+        chat_container = st.container(height=200)
+        with chat_container:
+            for msg in st.session_state.chatbot_history[-4:]:
+                if msg["role"] == "assistant":
+                    st.markdown(f"🤖 {msg['content'][:150]}{'...' if len(msg['content']) > 150 else ''}")
+                else:
+                    st.markdown(f"👤 {msg['content']}")
+
+        # Chat input
+        user_input = st.text_input(
+            "",
+            placeholder=get_text("chat_placeholder"),
+            key="sidebar_chat_input",
+            label_visibility="collapsed"
+        )
+
+        btn_cols = st.columns([3, 1])
+        with btn_cols[0]:
+            if st.button(get_text("send"), key="sidebar_send", use_container_width=True, type="primary"):
+                if user_input:
+                    st.session_state.chatbot_history.append({"role": "user", "content": user_input})
+                    with st.spinner("🤖..."):
+                        response = get_chatbot_response(
+                            user_input,
+                            st.session_state.chatbot_history,
+                            lang,
+                            st.session_state.chatbot_mode
+                        )
+                    st.session_state.chatbot_history.append({"role": "assistant", "content": response})
+                    add_xp(5)
+                    st.rerun()
+
+        with btn_cols[1]:
+            if st.button("🗑️", key="sidebar_clear", use_container_width=True):
+                st.session_state.chatbot_history = []
+                st.rerun()
 
 
 def module_bitcoin_basics():
@@ -1341,7 +1332,7 @@ def module_stories():
 
 
 def module_ai_tutor():
-    """AI Tutor Module with Character-Based Learning Modes"""
+    """AI Tutor Module with Learning Modes - Full Page Version"""
     st.header(get_text("tutor_title"))
 
     lang = st.session_state.language
@@ -1356,274 +1347,71 @@ def module_ai_tutor():
     st.divider()
 
     # ==================== MODE SELECTOR ====================
-    st.subheader("🎭 " + get_text("select_mode"))
+    st.subheader("🎭 " + ("Select Learning Mode" if lang == "en" else "Selecciona Modo de Aprendizaje"))
 
-    mode_col1, mode_col2, mode_col3 = st.columns(3)
+    mode_cols = st.columns(4)
+    modes = [
+        ("socratic", "🤔", get_text("mode_socratic")),
+        ("teacher", "👨‍🏫", get_text("mode_teacher")),
+        ("voice", "🗣️", get_text("mode_voice")),
+        ("curriculum", "📚", get_text("mode_curriculum"))
+    ]
 
-    with mode_col1:
-        if st.button(get_text("learn_with_luna"), key="mode_luna", use_container_width=True,
-                     type="primary" if st.session_state.tutor_mode == "luna" else "secondary"):
-            if st.session_state.tutor_mode != "luna":
-                st.session_state.tutor_mode = "luna"
-                # Auto-send intro if chat is empty
-                if not st.session_state.luna_chat_history:
-                    st.session_state.luna_chat_history.append({
-                        "role": "assistant",
-                        "content": get_text("luna_intro")
-                    })
+    for i, (mode_key, icon, label) in enumerate(modes):
+        with mode_cols[i]:
+            btn_type = "primary" if st.session_state.chatbot_mode == mode_key else "secondary"
+            if st.button(f"{icon} {label}", key=f"tutor_mode_{mode_key}", type=btn_type, use_container_width=True):
+                st.session_state.chatbot_mode = mode_key
                 st.rerun()
 
-    with mode_col2:
-        if st.button(get_text("teach_pedrito"), key="mode_pedrito", use_container_width=True,
-                     type="primary" if st.session_state.tutor_mode == "pedrito" else "secondary"):
-            if st.session_state.tutor_mode != "pedrito":
-                st.session_state.tutor_mode = "pedrito"
-                # Auto-send intro if chat is empty
-                if not st.session_state.pedrito_chat_history:
-                    st.session_state.pedrito_chat_history.append({
-                        "role": "assistant",
-                        "content": get_text("pedrito_intro")
-                    })
-                st.rerun()
+    # Mode description
+    mode_desc_key = f"{st.session_state.chatbot_mode}_desc"
+    st.info(get_text(mode_desc_key))
 
-    with mode_col3:
-        if st.button(get_text("adventure_mode"), key="mode_adventure", use_container_width=True,
-                     type="primary" if st.session_state.tutor_mode == "adventure" else "secondary"):
-            if st.session_state.tutor_mode != "adventure":
-                st.session_state.tutor_mode = "adventure"
-                st.rerun()
+    # Curriculum topic selector (only in curriculum mode)
+    if st.session_state.chatbot_mode == "curriculum":
+        st.subheader("📚 " + ("Current Topic" if lang == "en" else "Tema Actual"))
+        topic_names = [t[lang] for t in CURRICULUM_TOPICS]
+        selected_topic = st.selectbox(
+            "Select topic" if lang == "en" else "Selecciona tema",
+            topic_names,
+            index=st.session_state.curriculum_topic,
+            key="tutor_topic_select"
+        )
+        st.session_state.curriculum_topic = topic_names.index(selected_topic)
 
     st.divider()
 
-    mode = st.session_state.tutor_mode
+    # ==================== CHAT INTERFACE ====================
+    # Display chat messages
+    for message in st.session_state.chatbot_history:
+        avatar = "🤖" if message["role"] == "assistant" else "👤"
+        with st.chat_message(message["role"], avatar=avatar):
+            st.write(message["content"])
 
-    # ==================== LUNA MODE ====================
-    if mode == "luna":
-        st.markdown("### 🌙 Luna")
-        st.caption("Luna" + (" will teach you about Bitcoin!" if lang == "en" else " te enseñará sobre Bitcoin!"))
+    # Chat input
+    user_input = st.chat_input(get_text("chat_placeholder"))
 
-        # Get the correct chat history
-        chat_history = st.session_state.luna_chat_history
+    if user_input:
+        st.session_state.chatbot_history.append({"role": "user", "content": user_input})
 
-        # Display chat with Luna avatar
-        for message in chat_history:
-            avatar = "🌙" if message["role"] == "assistant" else "👤"
-            with st.chat_message(message["role"], avatar=avatar):
-                st.write(message["content"])
+        with st.spinner("🤖 " + ("Thinking..." if lang == "en" else "Pensando...")):
+            response = get_chatbot_response(
+                user_input,
+                st.session_state.chatbot_history[:-1],
+                lang,
+                st.session_state.chatbot_mode
+            )
 
-        # Chat input
-        user_input = st.chat_input(get_text("tutor_placeholder"))
+        st.session_state.chatbot_history.append({"role": "assistant", "content": response})
+        add_xp(5)
+        st.rerun()
 
-        if user_input:
-            st.session_state.luna_chat_history.append({"role": "user", "content": user_input})
-
-            with st.spinner("🌙 " + ("Luna is thinking..." if lang == "en" else "Luna está pensando...")):
-                response = get_character_response(
-                    user_input,
-                    st.session_state.luna_chat_history[:-1],
-                    lang,
-                    "luna"
-                )
-
-            st.session_state.luna_chat_history.append({"role": "assistant", "content": response})
-            st.session_state.luna_conversations += 1
-            add_xp(5)
-
-            # Check for Luna's Friend achievement
-            if st.session_state.luna_conversations >= 10:
-                add_achievement("ach_luna_friend")
-
+    # Clear chat button
+    if st.session_state.chatbot_history:
+        if st.button("🗑️ " + get_text("clear_chat"), key="tutor_clear"):
+            st.session_state.chatbot_history = []
             st.rerun()
-
-        # Reset button
-        if st.button("🔄 " + get_text("reset_conversation"), key="reset_luna"):
-            st.session_state.luna_chat_history = []
-            st.rerun()
-
-    # ==================== PEDRITO MODE ====================
-    elif mode == "pedrito":
-        st.markdown("### 👦 Pedrito")
-        st.info(get_text("teaching_tip"))
-
-        chat_history = st.session_state.pedrito_chat_history
-
-        # Display chat with Pedrito avatar
-        for message in chat_history:
-            avatar = "👦" if message["role"] == "assistant" else "👨‍🏫"
-            with st.chat_message(message["role"], avatar=avatar):
-                st.write(message["content"])
-
-        # Chat input
-        user_input = st.chat_input("Teach Pedrito..." if lang == "en" else "Enseña a Pedrito...")
-
-        if user_input:
-            st.session_state.pedrito_chat_history.append({"role": "user", "content": user_input})
-
-            # Check if user used teaching keywords
-            teaching_success = check_teaching_success(user_input)
-
-            with st.spinner("👦 " + ("Pedrito is thinking..." if lang == "en" else "Pedrito está pensando...")):
-                response = get_character_response(
-                    user_input,
-                    st.session_state.pedrito_chat_history[:-1],
-                    lang,
-                    "pedrito"
-                )
-
-            st.session_state.pedrito_chat_history.append({"role": "assistant", "content": response})
-
-            # Award bonus XP for good teaching
-            if teaching_success:
-                st.session_state.teaching_score += 1
-                add_xp(15)
-                st.toast(get_text("great_teaching"))
-
-                # Check for Great Teacher achievement
-                if st.session_state.teaching_score >= 5:
-                    add_achievement("ach_great_teacher")
-            else:
-                add_xp(3)
-
-            st.rerun()
-
-        # Reset button
-        if st.button("🔄 " + get_text("reset_conversation"), key="reset_pedrito"):
-            st.session_state.pedrito_chat_history = []
-            st.rerun()
-
-    # ==================== ADVENTURE MODE ====================
-    elif mode == "adventure":
-        st.markdown("### 📖 " + ("Bitcoin Adventure" if lang == "en" else "Aventura Bitcoin"))
-        st.caption(get_text("adventure_intro"))
-
-        # Chapter selector
-        st.subheader(get_text("chapter") + " " + ("Selection" if lang == "en" else "Selección"))
-
-        chapter_cols = st.columns(5)
-        for i, (ch_num, ch_info) in enumerate(ADVENTURE_CHAPTERS.items()):
-            with chapter_cols[i]:
-                title = ch_info["title_en"] if lang == "en" else ch_info["title_es"]
-                if ch_info["available"]:
-                    if st.button(f"{ch_num}. {title}", key=f"ch_{ch_num}",
-                                 type="primary" if st.session_state.story_chapter == ch_num else "secondary"):
-                        st.session_state.story_chapter = ch_num
-                        st.session_state.adventure_chat_history = []
-                        st.session_state.story_path = ""
-                        st.rerun()
-                else:
-                    st.button(f"🔒 {ch_num}", key=f"ch_{ch_num}", disabled=True)
-                    st.caption(get_text("coming_soon"))
-
-        st.divider()
-
-        # Check if student name is set
-        if not st.session_state.student_name:
-            st.write(get_text("enter_your_name"))
-            name_input = st.text_input("", key="adventure_name_input", placeholder="Tu nombre / Your name")
-            if st.button(get_text("start_adventure"), key="start_adv"):
-                if name_input:
-                    st.session_state.student_name = name_input
-                    # Generate initial story
-                    intro_prompt = f"Start chapter {st.session_state.story_chapter}. My name is {name_input}."
-                    with st.spinner("📖 " + ("Creating your adventure..." if lang == "en" else "Creando tu aventura...")):
-                        response = get_character_response(
-                            intro_prompt,
-                            [],
-                            lang,
-                            "adventure",
-                            student_name=name_input,
-                            chapter=st.session_state.story_chapter,
-                            story_path=""
-                        )
-                    st.session_state.adventure_chat_history.append({"role": "assistant", "content": response})
-                    st.rerun()
-        else:
-            # Show current chapter and path
-            st.caption(f"📍 {get_text('chapter')} {st.session_state.story_chapter} | " +
-                       ("Path" if lang == "en" else "Camino") + f": {st.session_state.story_path or '🆕'}")
-
-            chat_history = st.session_state.adventure_chat_history
-
-            # Display story with book avatar
-            for message in chat_history:
-                avatar = "📖" if message["role"] == "assistant" else "🧑‍🎤"
-                with st.chat_message(message["role"], avatar=avatar):
-                    st.write(message["content"])
-
-            # Choice buttons
-            st.divider()
-            choice_col1, choice_col2 = st.columns(2)
-
-            with choice_col1:
-                if st.button("🅰️ " + ("Choice A" if lang == "en" else "Opción A"), key="choice_a", use_container_width=True):
-                    st.session_state.story_path += "A"
-                    st.session_state.adventure_chat_history.append({"role": "user", "content": "I choose [A]"})
-
-                    with st.spinner("📖..."):
-                        response = get_character_response(
-                            "I chose option [A]. Continue the story.",
-                            st.session_state.adventure_chat_history[:-1],
-                            lang,
-                            "adventure",
-                            student_name=st.session_state.student_name,
-                            chapter=st.session_state.story_chapter,
-                            story_path=st.session_state.story_path
-                        )
-
-                    st.session_state.adventure_chat_history.append({"role": "assistant", "content": response})
-                    add_xp(10)
-                    st.rerun()
-
-            with choice_col2:
-                if st.button("🅱️ " + ("Choice B" if lang == "en" else "Opción B"), key="choice_b", use_container_width=True):
-                    st.session_state.story_path += "B"
-                    st.session_state.adventure_chat_history.append({"role": "user", "content": "I choose [B]"})
-
-                    with st.spinner("📖..."):
-                        response = get_character_response(
-                            "I chose option [B]. Continue the story.",
-                            st.session_state.adventure_chat_history[:-1],
-                            lang,
-                            "adventure",
-                            student_name=st.session_state.student_name,
-                            chapter=st.session_state.story_chapter,
-                            story_path=st.session_state.story_path
-                        )
-
-                    st.session_state.adventure_chat_history.append({"role": "assistant", "content": response})
-                    add_xp(10)
-                    st.rerun()
-
-            # Or type custom response
-            user_input = st.chat_input("Ask Luna something..." if lang == "en" else "Pregunta algo a Luna...")
-            if user_input:
-                st.session_state.adventure_chat_history.append({"role": "user", "content": user_input})
-
-                with st.spinner("📖..."):
-                    response = get_character_response(
-                        user_input,
-                        st.session_state.adventure_chat_history[:-1],
-                        lang,
-                        "adventure",
-                        student_name=st.session_state.student_name,
-                        chapter=st.session_state.story_chapter,
-                        story_path=st.session_state.story_path
-                    )
-
-                st.session_state.adventure_chat_history.append({"role": "assistant", "content": response})
-                add_xp(5)
-                st.rerun()
-
-            # Reset adventure button
-            if st.button("🔄 " + get_text("reset_conversation"), key="reset_adventure"):
-                st.session_state.adventure_chat_history = []
-                st.session_state.story_path = ""
-                st.session_state.student_name = ""
-                st.rerun()
-
-            # Check for Story Explorer achievement
-            if len(st.session_state.story_path) >= 5:
-                add_achievement("ach_story_explorer")
 
 
 # ============================================================================
