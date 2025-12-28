@@ -12,7 +12,6 @@ import {
   Send,
   HelpCircle,
   BookOpen,
-  Bot,
   Menu,
   X
 } from 'lucide-react';
@@ -25,9 +24,8 @@ import BudgetingGame from '@/components/modules/BudgetingGame';
 import TransactionSimulator from '@/components/modules/TransactionSimulator';
 import Quiz from '@/components/modules/Quiz';
 import Stories from '@/components/modules/Stories';
-import AITutor from '@/components/modules/AITutor';
 
-type ModuleKey = 'basics' | 'wallet' | 'history' | 'budget' | 'simulator' | 'quiz' | 'stories' | 'tutor';
+type ModuleKey = 'basics' | 'wallet' | 'history' | 'budget' | 'simulator' | 'quiz' | 'stories';
 
 const MODULES: { key: ModuleKey; icon: typeof Bitcoin; label: string }[] = [
   { key: 'basics', icon: Bitcoin, label: 'module_basics' },
@@ -37,7 +35,6 @@ const MODULES: { key: ModuleKey; icon: typeof Bitcoin; label: string }[] = [
   { key: 'simulator', icon: Send, label: 'module_simulator' },
   { key: 'quiz', icon: HelpCircle, label: 'module_quiz' },
   { key: 'stories', icon: BookOpen, label: 'module_stories' },
-  { key: 'tutor', icon: Bot, label: 'module_tutor' },
 ];
 
 const MODULE_COMPONENTS: Record<ModuleKey, React.ComponentType> = {
@@ -48,7 +45,6 @@ const MODULE_COMPONENTS: Record<ModuleKey, React.ComponentType> = {
   simulator: TransactionSimulator,
   quiz: Quiz,
   stories: Stories,
-  tutor: AITutor,
 };
 
 export default function Home() {
