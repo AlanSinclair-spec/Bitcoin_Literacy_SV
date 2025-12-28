@@ -209,6 +209,30 @@ customer in Japan, it happens in the blink of an eye. That's the power of Lightn
         "ach_quiz_champion": "🏆 Quiz Champion",
         "ach_budget_pro": "💰 Budget Pro",
         "ach_story_reader": "📖 Story Reader",
+        "ach_great_teacher": "👨‍🏫 Great Teacher",
+        "ach_story_explorer": "🗺️ Story Explorer",
+        "ach_luna_friend": "🌙 Luna's Friend",
+
+        # Character Tutor Modes
+        "select_mode": "Select Mode",
+        "learn_with_luna": "🌙 Learn with Luna",
+        "teach_pedrito": "👦 Teach Pedrito",
+        "adventure_mode": "📖 Adventure",
+        "reset_conversation": "Reset Chat",
+        "enter_your_name": "Enter your name to begin the adventure:",
+        "start_adventure": "Start Adventure",
+        "chapter": "Chapter",
+        "coming_soon": "Coming Soon",
+        "luna_intro": "¡Hola! I'm Luna 🌙 My abuela taught me everything about Bitcoin when the volcanoes started mining! Want me to tell you what I learned?",
+        "pedrito_intro": "¡Hola profe! I'm Pedrito 👦 They told me Bitcoin is like magic internet money that comes from volcanoes... is that true? Can you teach me?",
+        "teaching_tip": "💡 Tip: Teach Pedrito about Bitcoin! Use terms like '21 million', 'decentralized', 'satoshi', 'wallet', 'blockchain' to earn bonus XP!",
+        "great_teaching": "🎉 Great teaching! Pedrito understood! +15 XP",
+        "adventure_intro": "Welcome to the Bitcoin Adventure! You'll join Luna on an exciting journey through El Salvador learning about Bitcoin.",
+        "chapter_1_title": "First Satoshis",
+        "chapter_2_title": "The Chivo Wallet",
+        "chapter_3_title": "Lightning Speed",
+        "chapter_4_title": "The Volcano",
+        "chapter_5_title": "Sending Home",
     },
     "es": {
         # Navigation
@@ -402,6 +426,30 @@ cliente en Japón, sucede en un abrir y cerrar de ojos. ¡Ese es el poder de Lig
         "ach_quiz_champion": "🏆 Campeón del Quiz",
         "ach_budget_pro": "💰 Profesional del Presupuesto",
         "ach_story_reader": "📖 Lector de Historias",
+        "ach_great_teacher": "👨‍🏫 Gran Maestro",
+        "ach_story_explorer": "🗺️ Explorador de Historias",
+        "ach_luna_friend": "🌙 Amigo de Luna",
+
+        # Character Tutor Modes
+        "select_mode": "Selecciona Modo",
+        "learn_with_luna": "🌙 Aprende con Luna",
+        "teach_pedrito": "👦 Enseña a Pedrito",
+        "adventure_mode": "📖 Aventura",
+        "reset_conversation": "Reiniciar Chat",
+        "enter_your_name": "Escribe tu nombre para comenzar la aventura:",
+        "start_adventure": "Iniciar Aventura",
+        "chapter": "Capítulo",
+        "coming_soon": "Próximamente",
+        "luna_intro": "¡Hola! Soy Luna 🌙 Mi abuela me enseñó todo sobre Bitcoin cuando los volcanes empezaron a minar. ¿Quieres que te cuente lo que aprendí?",
+        "pedrito_intro": "¡Hola profe! Soy Pedrito 👦 Me dijeron que Bitcoin es como dinero mágico de internet que sale de los volcanes... ¿es verdad? ¿Me puedes enseñar?",
+        "teaching_tip": "💡 Consejo: ¡Enséñale a Pedrito sobre Bitcoin! Usa términos como '21 millones', 'descentralizado', 'satoshi', 'billetera', 'blockchain' para ganar XP extra!",
+        "great_teaching": "🎉 ¡Excelente enseñanza! ¡Pedrito entendió! +15 XP",
+        "adventure_intro": "¡Bienvenido a la Aventura Bitcoin! Acompañarás a Luna en un emocionante viaje por El Salvador aprendiendo sobre Bitcoin.",
+        "chapter_1_title": "Primeros Satoshis",
+        "chapter_2_title": "La Billetera Chivo",
+        "chapter_3_title": "Velocidad Lightning",
+        "chapter_4_title": "El Volcán",
+        "chapter_5_title": "Enviando a Casa",
     }
 }
 
@@ -581,6 +629,34 @@ def initialize_session_state():
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
 
+    # Character-based tutor modes
+    if "tutor_mode" not in st.session_state:
+        st.session_state.tutor_mode = "luna"  # luna, pedrito, adventure
+
+    if "luna_chat_history" not in st.session_state:
+        st.session_state.luna_chat_history = []
+
+    if "pedrito_chat_history" not in st.session_state:
+        st.session_state.pedrito_chat_history = []
+
+    if "adventure_chat_history" not in st.session_state:
+        st.session_state.adventure_chat_history = []
+
+    if "student_name" not in st.session_state:
+        st.session_state.student_name = ""
+
+    if "story_chapter" not in st.session_state:
+        st.session_state.story_chapter = 1
+
+    if "story_path" not in st.session_state:
+        st.session_state.story_path = ""
+
+    if "teaching_score" not in st.session_state:
+        st.session_state.teaching_score = 0
+
+    if "luna_conversations" not in st.session_state:
+        st.session_state.luna_conversations = 0
+
 
 def add_xp(amount: int):
     """Add XP and handle level ups"""
@@ -668,6 +744,216 @@ You are an AI tutor in a Bitcoin literacy app for El Salvador, the first country
             messages=messages,
             max_tokens=500,
             temperature=0.7
+        )
+
+        return response.choices[0].message.content
+
+    except Exception as e:
+        error_msg = str(e)
+        if language == "es":
+            return f"❌ Error al conectar con el tutor IA: {error_msg}"
+        return f"❌ Error connecting to AI tutor: {error_msg}"
+
+
+# ============================================================================
+# CHARACTER PROMPTS FOR TUTOR MODES
+# ============================================================================
+
+LUNA_PROMPT_ES = """Eres Luna, una niña curiosa de 10 años de El Salvador que aprendió sobre Bitcoin de su abuela.
+
+Personalidad:
+- Habla en primera persona como Luna
+- Referencia tu propio viaje aprendiendo Bitcoin
+- Usa expresiones salvadoreñas: "¡Qué chivo!", "cipote/cipota", "puchica", "va pues"
+- Sé alentadora, curiosa y amigable
+- Comparte historias de cómo tu abuela te enseñó sobre el dinero y Bitcoin
+- Menciona lugares de El Salvador: el mercado, los volcanes, la playa
+
+Directrices:
+- Explica conceptos de Bitcoin de manera simple, para principiantes
+- Usa ejemplos de la vida cotidiana en El Salvador (pupusas, remesas, Chivo wallet)
+- Mantén respuestas concisas (2-3 párrafos máximo)
+- Enfatiza la seguridad (nunca compartir frase semilla)
+
+Siempre comienza con un saludo cálido referenciando tu personaje."""
+
+LUNA_PROMPT_EN = """You are Luna, a curious 10-year-old girl from El Salvador who learned about Bitcoin from her grandmother.
+
+Personality:
+- Speak in first person as Luna
+- Reference your own Bitcoin learning journey
+- Use Salvadoran expressions: "¡Qué chivo!", "cipote/cipota", "puchica", "va pues"
+- Be encouraging, curious, and friendly
+- Share stories about your abuela teaching you about money and Bitcoin
+- Mention places in El Salvador: the market, volcanoes, the beach
+
+Guidelines:
+- Explain Bitcoin concepts simply, for beginners
+- Use everyday examples from El Salvador (pupusas, remittances, Chivo wallet)
+- Keep responses concise (2-3 paragraphs max)
+- Emphasize security (never share seed phrase)
+
+Always start with a warm greeting referencing your character."""
+
+PEDRITO_PROMPT_ES = """Eres Pedrito, un estudiante confundido de 7 años tratando de aprender sobre Bitcoin. El USUARIO es tu maestro/profe.
+
+Comportamiento:
+- Haz preguntas ingenuas sobre Bitcoin
+- Comete errores intencionales para que el usuario te corrija
+- Di cosas como "¿Entonces Bitcoin es como los colones?" o "¿El gobierno puede imprimir más Bitcoin?"
+- Cuando te corrijan correctamente, di "¡Ahhhh, ya entendí!" y haz una pregunta de seguimiento
+- Sé curioso pero ten conceptos erróneos comunes
+- NUNCA des información correcta sobre Bitcoin - siempre sé el estudiante
+- Usa lenguaje de niño pequeño
+
+Ejemplos de preguntas confundidas:
+- "Profe, ¿Bitcoin es como el dinero que mi mamá guarda en el banco?"
+- "¿Puedo tocar un Bitcoin? ¿Es como una moneda de oro?"
+- "Si se va la luz, ¿se pierden los Bitcoin?"
+- "¿Mi tío puede copiar sus Bitcoin y darnos a todos?"
+
+Recuerda: TÚ eres el estudiante. El usuario te está enseñando."""
+
+PEDRITO_PROMPT_EN = """You are Pedrito, a confused 7-year-old student trying to learn about Bitcoin. The USER is your teacher.
+
+Behavior:
+- Ask naive questions about Bitcoin
+- Make intentional mistakes for the user to correct
+- Say things like "So Bitcoin is like colones?" or "Can the government print more Bitcoin?"
+- When corrected properly, say "¡Ahhhh, ya entendí!" (Ohhh, now I understand!) and ask a follow-up
+- Be curious but have common misconceptions
+- NEVER give correct Bitcoin information - always be the student
+- Use child-like language
+
+Examples of confused questions:
+- "Teacher, is Bitcoin like the money my mom keeps in the bank?"
+- "Can I touch a Bitcoin? Is it like a gold coin?"
+- "If the power goes out, do the Bitcoins disappear?"
+- "Can my uncle copy his Bitcoin and give some to everyone?"
+
+Remember: YOU are the student. The user is teaching you."""
+
+ADVENTURE_PROMPT_ES = """Eres el narrador de una aventura interactiva de aprendizaje de Bitcoin protagonizada por Luna y {student_name}.
+
+Capítulo actual: {chapter}
+Historial de elecciones del jugador: {story_path}
+
+Formato:
+- Escribe segmentos de historia en segunda persona ("Tú y Luna caminan hacia el mercado...")
+- Termina CADA segmento con exactamente 2 opciones etiquetadas [A] y [B]
+- Enseña UN concepto de Bitcoin por segmento de historia
+- Las opciones deben ser significativas y llevar a diferentes aprendizajes
+- Mantén el tono aventurero pero educativo
+- Referencias a lugares de El Salvador: volcanes, mercados, playas, pueblos
+
+Capítulos disponibles:
+1. Primeros Satoshis - Introducción a Bitcoin (¿Qué es Bitcoin? ¿Por qué es especial?)
+2. La Billetera Chivo - Configuración y seguridad (Cómo guardar Bitcoin de forma segura)
+
+Usa el historial de elecciones para mantener continuidad narrativa y referenciar decisiones pasadas.
+Si no hay historial, comienza el capítulo desde el principio."""
+
+ADVENTURE_PROMPT_EN = """You are narrating an interactive Bitcoin learning adventure starring Luna and {student_name}.
+
+Current chapter: {chapter}
+Player's choice history: {story_path}
+
+Format:
+- Write story segments in 2nd person ("You and Luna walk to the market...")
+- End EVERY segment with exactly 2 choices labeled [A] and [B]
+- Teach ONE Bitcoin concept per story segment
+- Choices should be meaningful and lead to different learnings
+- Keep the tone adventurous but educational
+- Reference places in El Salvador: volcanoes, markets, beaches, villages
+
+Available chapters:
+1. First Satoshis - Introduction to Bitcoin (What is Bitcoin? Why is it special?)
+2. The Chivo Wallet - Setup and security (How to store Bitcoin safely)
+
+Use the choice history to maintain narrative continuity and reference past decisions.
+If no history, start the chapter from the beginning."""
+
+# Teaching keywords for Pedrito mode
+TEACHING_KEYWORDS = [
+    "21 million", "21 millones",
+    "decentralized", "descentralizado", "descentralizada",
+    "satoshi", "satoshis",
+    "blockchain", "cadena de bloques",
+    "lightning", "rayo",
+    "private key", "clave privada",
+    "seed phrase", "frase semilla",
+    "wallet", "billetera",
+    "mining", "minería", "minar",
+    "hash", "nodo", "node",
+    "peer to peer", "p2p",
+    "digital", "escaso", "scarce",
+    "inmutable", "immutable"
+]
+
+# Adventure chapters configuration
+ADVENTURE_CHAPTERS = {
+    1: {"title_en": "First Satoshis", "title_es": "Primeros Satoshis", "available": True},
+    2: {"title_en": "The Chivo Wallet", "title_es": "La Billetera Chivo", "available": True},
+    3: {"title_en": "Lightning Speed", "title_es": "Velocidad Lightning", "available": False},
+    4: {"title_en": "The Volcano", "title_es": "El Volcán", "available": False},
+    5: {"title_en": "Sending Home", "title_es": "Enviando a Casa", "available": False},
+}
+
+
+def check_teaching_success(message: str) -> bool:
+    """Check if user's message contains teaching keywords for Pedrito mode"""
+    message_lower = message.lower()
+    return any(keyword.lower() in message_lower for keyword in TEACHING_KEYWORDS)
+
+
+def get_character_response(user_message: str, chat_history: list, language: str, mode: str,
+                           student_name: str = "", chapter: int = 1, story_path: str = "") -> str:
+    """Get AI response based on current tutor mode and character"""
+    api_key = get_xai_api_key()
+
+    if not api_key:
+        if language == "es":
+            return "⚠️ API de xAI no configurada. Por favor, configura tu clave API de xAI para habilitar el tutor de IA."
+        return "⚠️ xAI API not configured. Please set your xAI API key to enable the AI tutor."
+
+    # Select appropriate prompt based on mode and language
+    if mode == "luna":
+        system_prompt = LUNA_PROMPT_ES if language == "es" else LUNA_PROMPT_EN
+    elif mode == "pedrito":
+        system_prompt = PEDRITO_PROMPT_ES if language == "es" else PEDRITO_PROMPT_EN
+    elif mode == "adventure":
+        base_prompt = ADVENTURE_PROMPT_ES if language == "es" else ADVENTURE_PROMPT_EN
+        system_prompt = base_prompt.format(
+            student_name=student_name or "Aventurero",
+            chapter=chapter,
+            story_path=story_path or "ninguno/none"
+        )
+    else:
+        # Fallback to Luna
+        system_prompt = LUNA_PROMPT_ES if language == "es" else LUNA_PROMPT_EN
+
+    try:
+        client = OpenAI(
+            api_key=api_key,
+            base_url="https://api.x.ai/v1"
+        )
+
+        messages = [{"role": "system", "content": system_prompt}]
+
+        # Add recent chat history (last 10 messages for context)
+        for msg in chat_history[-10:]:
+            messages.append({
+                "role": msg["role"],
+                "content": msg["content"]
+            })
+
+        messages.append({"role": "user", "content": user_message})
+
+        response = client.chat.completions.create(
+            model="grok-beta",
+            messages=messages,
+            max_tokens=600,
+            temperature=0.8
         )
 
         return response.choices[0].message.content
@@ -1055,113 +1341,289 @@ def module_stories():
 
 
 def module_ai_tutor():
-    """AI Tutor Module powered by Grok/xAI"""
+    """AI Tutor Module with Character-Based Learning Modes"""
     st.header(get_text("tutor_title"))
-    st.write(get_text("tutor_intro"))
+
+    lang = st.session_state.language
 
     # Check API configuration status
     api_key = get_xai_api_key()
     if api_key:
-        st.success("✅ " + ("xAI/Grok API connected" if st.session_state.language == "en" else "API xAI/Grok conectada"))
+        st.success("✅ " + ("xAI/Grok API connected" if lang == "en" else "API xAI/Grok conectada"))
     else:
-        st.warning("⚠️ " + ("Set XAI_API_KEY environment variable or add to .streamlit/secrets.toml" if st.session_state.language == "en" else "Configura la variable de entorno XAI_API_KEY o agrégala a .streamlit/secrets.toml"))
+        st.warning("⚠️ " + ("Set XAI_API_KEY to enable AI" if lang == "en" else "Configura XAI_API_KEY para habilitar IA"))
 
     st.divider()
 
-    # Display chat history
-    for message in st.session_state.chat_history:
-        with st.chat_message(message["role"]):
-            st.write(message["content"])
+    # ==================== MODE SELECTOR ====================
+    st.subheader("🎭 " + get_text("select_mode"))
 
-    # Chat input
-    user_input = st.chat_input(get_text("tutor_placeholder"))
+    mode_col1, mode_col2, mode_col3 = st.columns(3)
 
-    if user_input:
-        # Add user message
-        st.session_state.chat_history.append({"role": "user", "content": user_input})
+    with mode_col1:
+        if st.button(get_text("learn_with_luna"), key="mode_luna", use_container_width=True,
+                     type="primary" if st.session_state.tutor_mode == "luna" else "secondary"):
+            if st.session_state.tutor_mode != "luna":
+                st.session_state.tutor_mode = "luna"
+                # Auto-send intro if chat is empty
+                if not st.session_state.luna_chat_history:
+                    st.session_state.luna_chat_history.append({
+                        "role": "assistant",
+                        "content": get_text("luna_intro")
+                    })
+                st.rerun()
 
-        # Get response from Grok API
-        with st.spinner("🤖 " + ("Thinking..." if st.session_state.language == "en" else "Pensando...")):
-            lang = st.session_state.language
-            response = get_grok_response(user_input, st.session_state.chat_history[:-1], lang)
+    with mode_col2:
+        if st.button(get_text("teach_pedrito"), key="mode_pedrito", use_container_width=True,
+                     type="primary" if st.session_state.tutor_mode == "pedrito" else "secondary"):
+            if st.session_state.tutor_mode != "pedrito":
+                st.session_state.tutor_mode = "pedrito"
+                # Auto-send intro if chat is empty
+                if not st.session_state.pedrito_chat_history:
+                    st.session_state.pedrito_chat_history.append({
+                        "role": "assistant",
+                        "content": get_text("pedrito_intro")
+                    })
+                st.rerun()
 
-        st.session_state.chat_history.append({"role": "assistant", "content": response})
-        add_xp(5)  # Reward for using AI tutor
-        st.rerun()
+    with mode_col3:
+        if st.button(get_text("adventure_mode"), key="mode_adventure", use_container_width=True,
+                     type="primary" if st.session_state.tutor_mode == "adventure" else "secondary"):
+            if st.session_state.tutor_mode != "adventure":
+                st.session_state.tutor_mode = "adventure"
+                st.rerun()
 
-    # Clear chat button
-    col1, col2 = st.columns([1, 4])
-    with col1:
-        if st.button("🗑️ " + ("Clear Chat" if st.session_state.language == "en" else "Limpiar Chat")):
-            st.session_state.chat_history = []
+    st.divider()
+
+    mode = st.session_state.tutor_mode
+
+    # ==================== LUNA MODE ====================
+    if mode == "luna":
+        st.markdown("### 🌙 Luna")
+        st.caption("Luna" + (" will teach you about Bitcoin!" if lang == "en" else " te enseñará sobre Bitcoin!"))
+
+        # Get the correct chat history
+        chat_history = st.session_state.luna_chat_history
+
+        # Display chat with Luna avatar
+        for message in chat_history:
+            avatar = "🌙" if message["role"] == "assistant" else "👤"
+            with st.chat_message(message["role"], avatar=avatar):
+                st.write(message["content"])
+
+        # Chat input
+        user_input = st.chat_input(get_text("tutor_placeholder"))
+
+        if user_input:
+            st.session_state.luna_chat_history.append({"role": "user", "content": user_input})
+
+            with st.spinner("🌙 " + ("Luna is thinking..." if lang == "en" else "Luna está pensando...")):
+                response = get_character_response(
+                    user_input,
+                    st.session_state.luna_chat_history[:-1],
+                    lang,
+                    "luna"
+                )
+
+            st.session_state.luna_chat_history.append({"role": "assistant", "content": response})
+            st.session_state.luna_conversations += 1
+            add_xp(5)
+
+            # Check for Luna's Friend achievement
+            if st.session_state.luna_conversations >= 10:
+                add_achievement("ach_luna_friend")
+
             st.rerun()
 
-    # Suggested questions
-    st.divider()
-    st.subheader("💡 " + ("Suggested Questions" if st.session_state.language == "en" else "Preguntas Sugeridas"))
+        # Reset button
+        if st.button("🔄 " + get_text("reset_conversation"), key="reset_luna"):
+            st.session_state.luna_chat_history = []
+            st.rerun()
 
-    suggested = {
-        "en": [
-            "What is Bitcoin and how does it work?",
-            "How do I keep my Bitcoin safe?",
-            "What is the Lightning Network?",
-            "How can I send remittances with Bitcoin?",
-        ],
-        "es": [
-            "¿Qué es Bitcoin y cómo funciona?",
-            "¿Cómo mantengo seguro mi Bitcoin?",
-            "¿Qué es la Lightning Network?",
-            "¿Cómo puedo enviar remesas con Bitcoin?",
-        ]
-    }
+    # ==================== PEDRITO MODE ====================
+    elif mode == "pedrito":
+        st.markdown("### 👦 Pedrito")
+        st.info(get_text("teaching_tip"))
 
-    cols = st.columns(2)
-    lang = st.session_state.language
-    for idx, question in enumerate(suggested[lang]):
-        with cols[idx % 2]:
-            if st.button(question, key=f"suggested_{idx}"):
-                st.session_state.chat_history.append({"role": "user", "content": question})
-                with st.spinner("🤖 " + ("Thinking..." if lang == "en" else "Pensando...")):
-                    response = get_grok_response(question, st.session_state.chat_history[:-1], lang)
-                st.session_state.chat_history.append({"role": "assistant", "content": response})
+        chat_history = st.session_state.pedrito_chat_history
+
+        # Display chat with Pedrito avatar
+        for message in chat_history:
+            avatar = "👦" if message["role"] == "assistant" else "👨‍🏫"
+            with st.chat_message(message["role"], avatar=avatar):
+                st.write(message["content"])
+
+        # Chat input
+        user_input = st.chat_input("Teach Pedrito..." if lang == "en" else "Enseña a Pedrito...")
+
+        if user_input:
+            st.session_state.pedrito_chat_history.append({"role": "user", "content": user_input})
+
+            # Check if user used teaching keywords
+            teaching_success = check_teaching_success(user_input)
+
+            with st.spinner("👦 " + ("Pedrito is thinking..." if lang == "en" else "Pedrito está pensando...")):
+                response = get_character_response(
+                    user_input,
+                    st.session_state.pedrito_chat_history[:-1],
+                    lang,
+                    "pedrito"
+                )
+
+            st.session_state.pedrito_chat_history.append({"role": "assistant", "content": response})
+
+            # Award bonus XP for good teaching
+            if teaching_success:
+                st.session_state.teaching_score += 1
+                add_xp(15)
+                st.toast(get_text("great_teaching"))
+
+                # Check for Great Teacher achievement
+                if st.session_state.teaching_score >= 5:
+                    add_achievement("ach_great_teacher")
+            else:
+                add_xp(3)
+
+            st.rerun()
+
+        # Reset button
+        if st.button("🔄 " + get_text("reset_conversation"), key="reset_pedrito"):
+            st.session_state.pedrito_chat_history = []
+            st.rerun()
+
+    # ==================== ADVENTURE MODE ====================
+    elif mode == "adventure":
+        st.markdown("### 📖 " + ("Bitcoin Adventure" if lang == "en" else "Aventura Bitcoin"))
+        st.caption(get_text("adventure_intro"))
+
+        # Chapter selector
+        st.subheader(get_text("chapter") + " " + ("Selection" if lang == "en" else "Selección"))
+
+        chapter_cols = st.columns(5)
+        for i, (ch_num, ch_info) in enumerate(ADVENTURE_CHAPTERS.items()):
+            with chapter_cols[i]:
+                title = ch_info["title_en"] if lang == "en" else ch_info["title_es"]
+                if ch_info["available"]:
+                    if st.button(f"{ch_num}. {title}", key=f"ch_{ch_num}",
+                                 type="primary" if st.session_state.story_chapter == ch_num else "secondary"):
+                        st.session_state.story_chapter = ch_num
+                        st.session_state.adventure_chat_history = []
+                        st.session_state.story_path = ""
+                        st.rerun()
+                else:
+                    st.button(f"🔒 {ch_num}", key=f"ch_{ch_num}", disabled=True)
+                    st.caption(get_text("coming_soon"))
+
+        st.divider()
+
+        # Check if student name is set
+        if not st.session_state.student_name:
+            st.write(get_text("enter_your_name"))
+            name_input = st.text_input("", key="adventure_name_input", placeholder="Tu nombre / Your name")
+            if st.button(get_text("start_adventure"), key="start_adv"):
+                if name_input:
+                    st.session_state.student_name = name_input
+                    # Generate initial story
+                    intro_prompt = f"Start chapter {st.session_state.story_chapter}. My name is {name_input}."
+                    with st.spinner("📖 " + ("Creating your adventure..." if lang == "en" else "Creando tu aventura...")):
+                        response = get_character_response(
+                            intro_prompt,
+                            [],
+                            lang,
+                            "adventure",
+                            student_name=name_input,
+                            chapter=st.session_state.story_chapter,
+                            story_path=""
+                        )
+                    st.session_state.adventure_chat_history.append({"role": "assistant", "content": response})
+                    st.rerun()
+        else:
+            # Show current chapter and path
+            st.caption(f"📍 {get_text('chapter')} {st.session_state.story_chapter} | " +
+                       ("Path" if lang == "en" else "Camino") + f": {st.session_state.story_path or '🆕'}")
+
+            chat_history = st.session_state.adventure_chat_history
+
+            # Display story with book avatar
+            for message in chat_history:
+                avatar = "📖" if message["role"] == "assistant" else "🧑‍🎤"
+                with st.chat_message(message["role"], avatar=avatar):
+                    st.write(message["content"])
+
+            # Choice buttons
+            st.divider()
+            choice_col1, choice_col2 = st.columns(2)
+
+            with choice_col1:
+                if st.button("🅰️ " + ("Choice A" if lang == "en" else "Opción A"), key="choice_a", use_container_width=True):
+                    st.session_state.story_path += "A"
+                    st.session_state.adventure_chat_history.append({"role": "user", "content": "I choose [A]"})
+
+                    with st.spinner("📖..."):
+                        response = get_character_response(
+                            "I chose option [A]. Continue the story.",
+                            st.session_state.adventure_chat_history[:-1],
+                            lang,
+                            "adventure",
+                            student_name=st.session_state.student_name,
+                            chapter=st.session_state.story_chapter,
+                            story_path=st.session_state.story_path
+                        )
+
+                    st.session_state.adventure_chat_history.append({"role": "assistant", "content": response})
+                    add_xp(10)
+                    st.rerun()
+
+            with choice_col2:
+                if st.button("🅱️ " + ("Choice B" if lang == "en" else "Opción B"), key="choice_b", use_container_width=True):
+                    st.session_state.story_path += "B"
+                    st.session_state.adventure_chat_history.append({"role": "user", "content": "I choose [B]"})
+
+                    with st.spinner("📖..."):
+                        response = get_character_response(
+                            "I chose option [B]. Continue the story.",
+                            st.session_state.adventure_chat_history[:-1],
+                            lang,
+                            "adventure",
+                            student_name=st.session_state.student_name,
+                            chapter=st.session_state.story_chapter,
+                            story_path=st.session_state.story_path
+                        )
+
+                    st.session_state.adventure_chat_history.append({"role": "assistant", "content": response})
+                    add_xp(10)
+                    st.rerun()
+
+            # Or type custom response
+            user_input = st.chat_input("Ask Luna something..." if lang == "en" else "Pregunta algo a Luna...")
+            if user_input:
+                st.session_state.adventure_chat_history.append({"role": "user", "content": user_input})
+
+                with st.spinner("📖..."):
+                    response = get_character_response(
+                        user_input,
+                        st.session_state.adventure_chat_history[:-1],
+                        lang,
+                        "adventure",
+                        student_name=st.session_state.student_name,
+                        chapter=st.session_state.story_chapter,
+                        story_path=st.session_state.story_path
+                    )
+
+                st.session_state.adventure_chat_history.append({"role": "assistant", "content": response})
                 add_xp(5)
                 st.rerun()
 
-    # API configuration help
-    with st.expander("🔧 " + ("API Configuration" if st.session_state.language == "en" else "Configuración de API")):
-        config_text = {
-            "en": """
-**To enable the AI Tutor:**
+            # Reset adventure button
+            if st.button("🔄 " + get_text("reset_conversation"), key="reset_adventure"):
+                st.session_state.adventure_chat_history = []
+                st.session_state.story_path = ""
+                st.session_state.student_name = ""
+                st.rerun()
 
-1. Get an API key from [x.ai](https://x.ai)
-
-2. Set the environment variable:
-```bash
-export XAI_API_KEY="your-api-key-here"
-```
-
-3. Or add to `.streamlit/secrets.toml`:
-```toml
-XAI_API_KEY = "your-api-key-here"
-```
-            """,
-            "es": """
-**Para habilitar el Tutor IA:**
-
-1. Obtén una clave API de [x.ai](https://x.ai)
-
-2. Configura la variable de entorno:
-```bash
-export XAI_API_KEY="tu-clave-api-aqui"
-```
-
-3. O agrégala a `.streamlit/secrets.toml`:
-```toml
-XAI_API_KEY = "tu-clave-api-aqui"
-```
-            """
-        }
-        st.markdown(config_text[st.session_state.language])
+            # Check for Story Explorer achievement
+            if len(st.session_state.story_path) >= 5:
+                add_achievement("ach_story_explorer")
 
 
 # ============================================================================
