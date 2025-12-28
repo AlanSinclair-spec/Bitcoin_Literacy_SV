@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bitcoin-orange: #F7931A;
+  --bitcoin-orange-light: #FFA500;
+  --dark-bg: #1a1a2e;
+  --dark-secondary: #16213e;
+}
+
+body {
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+  min-height: 100vh;
+  color: white;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #16213e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #F7931A;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FFA500;
+}
+
+/* Bitcoin orange gradient text */
+.text-bitcoin-gradient {
+  background: linear-gradient(90deg, #F7931A 0%, #FFA500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Button styles */
+.btn-bitcoin {
+  @apply bg-gradient-to-r from-bitcoin-orange to-bitcoin-orange-light text-white font-semibold py-2 px-4 rounded-full transition-all duration-200 hover:shadow-lg hover:shadow-bitcoin-orange/30 active:scale-95;
+}
+
+.btn-secondary {
+  @apply bg-bitcoin-dark-secondary text-white font-semibold py-2 px-4 rounded-full border border-bitcoin-orange/30 transition-all duration-200 hover:border-bitcoin-orange hover:bg-bitcoin-dark;
+}
+
+/* Card styles */
+.card {
+  @apply bg-bitcoin-dark-secondary rounded-xl p-6 border border-bitcoin-orange/20;
+}
+
+/* Module button */
+.module-btn {
+  @apply bg-bitcoin-dark-secondary hover:bg-bitcoin-dark border border-bitcoin-orange/30 hover:border-bitcoin-orange rounded-xl p-4 transition-all duration-200 text-left w-full;
+}
+
+/* Chat message */
+.chat-message {
+  @apply rounded-lg p-3 max-w-[85%];
+}
+
+.chat-message-user {
+  @apply bg-bitcoin-orange/20 ml-auto;
+}
+
+.chat-message-assistant {
+  @apply bg-bitcoin-dark border border-bitcoin-orange/20;
+}
+
+/* Progress bar */
+.progress-bar {
+  @apply h-2 bg-bitcoin-dark rounded-full overflow-hidden;
+}
+
+.progress-bar-fill {
+  @apply h-full bg-gradient-to-r from-bitcoin-orange to-bitcoin-orange-light transition-all duration-300;
+}
+
+/* Animations */
+@keyframes pulse-orange {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(247, 147, 26, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(247, 147, 26, 0);
+  }
+}
+
+.animate-pulse-orange {
+  animation: pulse-orange 2s infinite;
+}
+
+/* XP popup animation */
+@keyframes float-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+}
+
+.xp-popup {
+  animation: float-up 1s ease-out forwards;
+}
